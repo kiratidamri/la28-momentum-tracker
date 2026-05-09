@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LA28 Momentum Tracker — Team USA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:    #07111f;
+      --navy2:   #0d1b2e;
+      --navy3:   #152438;
+      --navy4:   #1c2f47;
+      --gold:    #f5c518;
+      --gold2:   #e8a900;
+      --silver:  #c0c8d4;
+      --bronze:  #cd8c4a;
+      --blue:    #1d6fa4;
+      --red:     #bf2b2b;
+      --green:   #22c55e;
+      --yellow:  #eab308;
+      --orange:  #f97316;
+      --text:    #e8edf3;
+      --muted:   #7a90a8;
+      --border:  rgba(255,255,255,0.07);
+      --radius:  14px;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── LAYOUT ─────────────────────────────────────────── */
+    .app {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, #07111f 0%, #0d1b2e 60%, #152438 100%);
+      border-bottom: 1px solid var(--border);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .header-left { display: flex; align-items: center; gap: 16px; }
+
+    .logo-ring {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #2196f3 0deg 72deg,
+        #f5c518 72deg 144deg,
+        #1b1b1b 144deg 216deg,
+        #22c55e 216deg 288deg,
+        #ef4444 288deg 360deg
+      );
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .logo-ring::after {
+      content: '';
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--navy2);
+    }
+
+    .header-title h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .header-title h1 span { color: var(--gold); }
+    .header-title p {
+      font-size: 0.72rem;
+      color: var(--muted);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .header-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(245, 197, 24, 0.1);
+      border: 1px solid rgba(245, 197, 24, 0.25);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    .pulse-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50%       { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      overflow: hidden;
+    }
+
+    /* ── RANKINGS PANEL ─────────────────────────────────── */
+    .rankings-panel {
+      overflow-y: auto;
+      padding: 24px 20px 24px 28px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--navy4) transparent;
+    }
+    .rankings-panel::-webkit-scrollbar { width: 5px; }
+    .rankings-panel::-webkit-scrollbar-thumb { background: var(--navy4); border-radius: 4px; }
+
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    /* ── ERROR ──────────────────────────────────────────── */
+    .error-box {
+      background: rgba(191, 43, 43, 0.12);
+      border: 1px solid rgba(191, 43, 43, 0.4);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      color: #f87171;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* ── SPORT CARD ─────────────────────────────────────── */
+    .sport-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .sport-card {
+      background: var(--navy2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: grid;
+      grid-template-columns: 48px 1fr auto;
+      gap: 0 16px;
+      align-items: center;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      animation: slideIn 0.4s ease both;
+    }
+    .sport-card:hover {
+      background: var(--navy3);
+      border-color: rgba(255,255,255,0.12);
+      transform: translateX(3px);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* stagger cards */
+    {% for i in range(1, 11) %}
+    .sport-card:nth-child({{ i }}) { animation-delay: {{ (i - 1) * 0.05 }}s; }
+    {% endfor %}
+
+    .sport-card.rank-1 { border-color: rgba(245,197,24,0.35); background: linear-gradient(135deg, rgba(245,197,24,0.07) 0%, var(--navy2) 60%); }
+    .sport-card.rank-2 { border-color: rgba(192,200,212,0.25); background: linear-gradient(135deg, rgba(192,200,212,0.05) 0%, var(--navy2) 60%); }
+    .sport-card.rank-3 { border-color: rgba(205,140,74,0.25);  background: linear-gradient(135deg, rgba(205,140,74,0.05) 0%, var(--navy2) 60%); }
+
+    .rank-badge {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 900;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .rank-1 .rank-badge { background: rgba(245,197,24,0.15); color: var(--gold); font-size: 1.4rem; }
+    .rank-2 .rank-badge { background: rgba(192,200,212,0.12); color: var(--silver); font-size: 1.4rem; }
+    .rank-3 .rank-badge { background: rgba(205,140,74,0.12);  color: var(--bronze); font-size: 1.4rem; }
+    .rank-badge.num    { background: var(--navy4); color: var(--muted); }
+
+    .sport-info { grid-column: 2; overflow: hidden; }
+    .sport-name {
+      font-weight: 700;
+      font-size: 0.97rem;
+      letter-spacing: -0.01em;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .sport-insight {
+      font-size: 0.78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 8px;
+    }
+
+    .bar-track {
+      height: 5px;
+      border-radius: 999px;
+      background: var(--navy4);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bar-high   { background: linear-gradient(90deg, #22c55e, #4ade80); }
+    .bar-medium { background: linear-gradient(90deg, #eab308, #facc15); }
+    .bar-low    { background: linear-gradient(90deg, #f97316, #fb923c); }
+
+    .score-block {
+      grid-column: 3;
+      text-align: right;
+      flex-shrink: 0;
+    }
+    .score-number {
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+    .score-high   { color: var(--green); }
+    .score-medium { color: var(--yellow); }
+    .score-low    { color: var(--orange); }
+    .score-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    /* ── CHAT PANEL ─────────────────────────────────────── */
+    .chat-panel {
+      border-left: 1px solid var(--border);
+      background: var(--navy2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .chat-icon {
+      width: 34px; height: 34px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), #1a56db);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+    .chat-header-text h2 {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .chat-header-text p {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--navy4) transparent;
+    }
+    .chat-messages::-webkit-scrollbar { width: 4px; }
+    .chat-messages::-webkit-scrollbar-thumb { background: var(--navy4); border-radius: 4px; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      animation: fadeUp 0.25s ease;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.user  { align-items: flex-end; }
+    .msg.model { align-items: flex-start; }
+
+    .msg-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 4px;
+    }
+
+    .bubble {
+      max-width: 88%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.84rem;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .msg.user  .bubble {
+      background: linear-gradient(135deg, var(--blue), #1a56db);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.model .bubble {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-bubble {
+      background: var(--navy3);
+      border: 1px solid var(--border);
+      padding: 12px 18px;
+      border-radius: 14px;
+      border-bottom-left-radius: 4px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      animation: bounce 1.2s ease-in-out infinite;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: translateY(0); }
+      40%           { transform: translateY(-6px); }
+    }
+
+    .chat-suggestions {
+      padding: 0 16px 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .suggestion-chip {
+      background: var(--navy4);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+      font-size: 0.73rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    .suggestion-chip:hover {
+      background: var(--navy3);
+      color: var(--text);
+      border-color: rgba(255,255,255,0.15);
+    }
+
+    .chat-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .chat-input {
+      flex: 1;
+      background: var(--navy4);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.85rem;
+      outline: none;
+      resize: none;
+      height: 42px;
+      max-height: 120px;
+      transition: border-color 0.15s;
+      line-height: 1.4;
+    }
+    .chat-input:focus { border-color: var(--blue); }
+    .chat-input::placeholder { color: var(--muted); }
+
+    .send-btn {
+      width: 42px; height: 42px;
+      flex-shrink: 0;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), #1a56db);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.15s, transform 0.1s;
+      color: #fff;
+    }
+    .send-btn:hover:not(:disabled) { opacity: 0.88; }
+    .send-btn:active:not(:disabled) { transform: scale(0.94); }
+    .send-btn:disabled { opacity: 0.4; cursor: default; }
+    .send-btn svg { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── EMPTY STATE ───────────────────────────────────── */
+    .empty-chat {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 32px;
+      text-align: center;
+    }
+    .empty-icon { font-size: 2.4rem; }
+    .empty-chat h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); }
+    .empty-chat p  { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── SCROLLBAR FOR RANKINGS ────────────────────────── */
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .chat-panel { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="logo-ring"></div>
+      <div class="header-title">
+        <h1>LA28 <span>Momentum</span> Tracker</h1>
+        <p>Team USA &bull; 2028 Los Angeles Olympics</p>
+      </div>
+    </div>
+    <div class="header-badge">
+      <div class="pulse-dot"></div>
+      AI-Powered Rankings
+    </div>
+  </header>
+
+  <div class="main">
+
+    <!-- RANKINGS PANEL -->
+    <section class="rankings-panel">
+      <div class="section-title">Sport Rankings by Momentum Score</div>
+
+      {% if error %}
+      <div class="error-box">
+        <strong>Error:</strong> {{ error }}
+      </div>
+      {% elif sports %}
+      <div class="sport-list">
+        {% for sport in sports %}
+        {% set score = sport.score %}
+        {% set rank  = sport.rank %}
+        {% if score >= 75 %}{% set tier = "high" %}
+        {% elif score >= 50 %}{% set tier = "medium" %}
+        {% else %}{% set tier = "low" %}{% endif %}
+
+        <div class="sport-card rank-{{ rank if rank <= 3 else 'other' }}">
+
+          <!-- Rank badge -->
+          <div class="rank-badge {% if rank > 3 %}num{% endif %}">
+            {% if rank == 1 %}🥇
+            {% elif rank == 2 %}🥈
+            {% elif rank == 3 %}🥉
+            {% else %}{{ rank }}{% endif %}
+          </div>
+
+          <!-- Sport info -->
+          <div class="sport-info">
+            <div class="sport-name">{{ sport.name }}</div>
+            <div class="sport-insight">{{ sport.insight }}</div>
+            <div class="bar-track">
+              <div class="bar-fill bar-{{ tier }}" style="width: {{ score }}%;"></div>
+            </div>
+          </div>
+
+          <!-- Score -->
+          <div class="score-block">
+            <div class="score-number score-{{ tier }}">{{ score }}</div>
+            <div class="score-label">/ 100</div>
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="error-box">No data available. Check your GEMINI_API_KEY in .env</div>
+      {% endif %}
+    </section>
+
+    <!-- CHAT PANEL -->
+    <aside class="chat-panel">
+      <div class="chat-header">
+        <div class="chat-icon">💬</div>
+        <div class="chat-header-text">
+          <h2>Team USA Analyst</h2>
+          <p>Ask anything about LA28 preparation</p>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="empty-chat" id="emptyState">
+          <div class="empty-icon">🏅</div>
+          <h3>Your LA28 Analyst</h3>
+          <p>Ask about athletes, events, medal prospects, or anything Team USA heading into LA28.</p>
+        </div>
+      </div>
+
+      <div class="chat-suggestions" id="suggestions">
+        <button class="suggestion-chip" onclick="sendSuggestion(this)">Who leads swimming?</button>
+        <button class="suggestion-chip" onclick="sendSuggestion(this)">Top gymnastics athletes?</button>
+        <button class="suggestion-chip" onclick="sendSuggestion(this)">Medal predictions?</button>
+        <button class="suggestion-chip" onclick="sendSuggestion(this)">Best improvement?</button>
+      </div>
+
+      <div class="chat-input-area">
+        <textarea
+          class="chat-input"
+          id="chatInput"
+          placeholder="Ask about Team USA…"
+          rows="1"
+        ></textarea>
+        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+  </div>
+</div>
+
+<script>
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput    = document.getElementById('chatInput');
+  const sendBtn      = document.getElementById('sendBtn');
+  const emptyState   = document.getElementById('emptyState');
+  const suggestions  = document.getElementById('suggestions');
+
+  // Conversation history sent to the server with each request
+  let history = [];
+
+  // Auto-grow textarea
+  chatInput.addEventListener('input', () => {
+    chatInput.style.height = '42px';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+  });
+
+  chatInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  function sendSuggestion(el) {
+    chatInput.value = el.textContent;
+    suggestions.style.display = 'none';
+    sendMessage();
+  }
+
+  function appendMessage(role, content) {
+    if (emptyState) emptyState.remove();
+
+    const wrapper = document.createElement('div');
+    wrapper.className = `msg ${role}`;
+
+    const label = document.createElement('div');
+    label.className = 'msg-label';
+    label.textContent = role === 'user' ? 'You' : 'Team USA Analyst';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.textContent = content;
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(bubble);
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return bubble;
+  }
+
+  function showTyping() {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'msg model';
+    wrapper.id = 'typingIndicator';
+
+    const label = document.createElement('div');
+    label.className = 'msg-label';
+    label.textContent = 'Team USA Analyst';
+
+    const bubble = document.createElement('div');
+    bubble.className = 'typing-bubble';
+    bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(bubble);
+    chatMessages.appendChild(wrapper);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function removeTyping() {
+    const el = document.getElementById('typingIndicator');
+    if (el) el.remove();
+  }
+
+  async function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+
+    chatInput.value = '';
+    chatInput.style.height = '42px';
+    sendBtn.disabled = true;
+
+    appendMessage('user', text);
+    showTyping();
+
+    try {
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history }),
+      });
+
+      const data = await res.json();
+      removeTyping();
+
+      if (data.error) {
+        appendMessage('model', `Error: ${data.error}`);
+      } else {
+        appendMessage('model', data.response);
+        // Add both turns to local history for context continuity
+        history.push({ role: 'user',  content: text });
+        history.push({ role: 'model', content: data.response });
+        // Cap history to last 20 turns to avoid huge payloads
+        if (history.length > 20) history = history.slice(-20);
+      }
+    } catch (err) {
+      removeTyping();
+      appendMessage('model', 'Network error — please try again.');
+    } finally {
+      sendBtn.disabled = false;
+      chatInput.focus();
+    }
+  }
+</script>
+</body>
+</html>

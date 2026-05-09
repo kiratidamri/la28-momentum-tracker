@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 *)",
+      "Bash(pkill -f \"python app.py\")",
+      "Bash(python /Users/kirati.damrigmail.com/team-usa-la28/app.py)",
+      "Bash(echo \"PID: $!\")",
+      "Read(//private/tmp/**)",
+      "Bash(curl -s http://127.0.0.1:5000/)"
+    ]
+  }
+}
