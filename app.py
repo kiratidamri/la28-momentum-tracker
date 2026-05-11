@@ -17,7 +17,7 @@ SPORTS = [
 api_key = os.getenv("GEMINI_API_KEY")
 client = genai.Client(api_key=api_key) if api_key else None
 
-MODEL = "gemini-2.0-flash-lite"
+MODEL = "gemini-2.5-flash"
 
 CHAT_SYSTEM = (
     "You are an expert Team USA sports analyst and LA28 Olympic Games enthusiast. "
