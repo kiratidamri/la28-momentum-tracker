@@ -16,11 +16,11 @@
       --navy3:   #152438;
       --navy4:   #1c2f47;
       --gold:    #f5c518;
-      --gold2:   #e8a900;
       --silver:  #c0c8d4;
       --bronze:  #cd8c4a;
       --blue:    #1d6fa4;
-      --red:     #bf2b2b;
+      --para:    #9333ea;
+      --para2:   #7c3aed;
       --green:   #22c55e;
       --yellow:  #eab308;
       --orange:  #f97316;
@@ -38,17 +38,17 @@
       overflow: hidden;
     }
 
-    /* ── LAYOUT ─────────────────────────────────────────── */
     .app {
       display: grid;
       grid-template-rows: auto 1fr;
       height: 100vh;
     }
 
+    /* ── HEADER ─────────────────────────────────────────── */
     header {
       background: linear-gradient(135deg, #07111f 0%, #0d1b2e 60%, #152438 100%);
       border-bottom: 1px solid var(--border);
-      padding: 18px 28px;
+      padding: 16px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -59,13 +59,11 @@
     .header-left { display: flex; align-items: center; gap: 16px; }
 
     .logo-ring {
-      width: 46px; height: 46px;
+      width: 44px; height: 44px;
       border-radius: 50%;
       background: conic-gradient(
-        #2196f3 0deg 72deg,
-        #f5c518 72deg 144deg,
-        #1b1b1b 144deg 216deg,
-        #22c55e 216deg 288deg,
+        #2196f3 0deg 72deg, #f5c518 72deg 144deg,
+        #1b1b1b 144deg 216deg, #22c55e 216deg 288deg,
         #ef4444 288deg 360deg
       );
       display: flex; align-items: center; justify-content: center;
@@ -73,41 +71,30 @@
     }
     .logo-ring::after {
       content: '';
-      width: 34px; height: 34px;
+      width: 32px; height: 32px;
       border-radius: 50%;
       background: var(--navy2);
     }
 
     .header-title h1 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: #fff;
-      line-height: 1.1;
+      font-size: 1.3rem; font-weight: 800;
+      letter-spacing: -0.02em; color: #fff; line-height: 1.1;
     }
     .header-title h1 span { color: var(--gold); }
     .header-title p {
-      font-size: 0.72rem;
-      color: var(--muted);
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-top: 2px;
+      font-size: 0.7rem; color: var(--muted); font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase; margin-top: 2px;
     }
 
     .header-badge {
       display: flex; align-items: center; gap: 8px;
-      background: rgba(245, 197, 24, 0.1);
-      border: 1px solid rgba(245, 197, 24, 0.25);
-      border-radius: 999px;
-      padding: 6px 14px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--gold);
+      background: rgba(245,197,24,0.1);
+      border: 1px solid rgba(245,197,24,0.25);
+      border-radius: 999px; padding: 6px 14px;
+      font-size: 0.75rem; font-weight: 600; color: var(--gold);
     }
     .pulse-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
+      width: 7px; height: 7px; border-radius: 50%;
       background: var(--gold);
       animation: pulse 2s ease-in-out infinite;
     }
@@ -116,6 +103,7 @@
       50%       { opacity: 0.4; transform: scale(0.7); }
     }
 
+    /* ── MAIN LAYOUT ────────────────────────────────────── */
     .main {
       display: grid;
       grid-template-columns: 1fr 400px;
@@ -125,244 +113,215 @@
     /* ── RANKINGS PANEL ─────────────────────────────────── */
     .rankings-panel {
       overflow-y: auto;
-      padding: 24px 20px 24px 28px;
+      padding: 20px 20px 20px 28px;
       scrollbar-width: thin;
       scrollbar-color: var(--navy4) transparent;
     }
     .rankings-panel::-webkit-scrollbar { width: 5px; }
     .rankings-panel::-webkit-scrollbar-thumb { background: var(--navy4); border-radius: 4px; }
 
-    .section-title {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
+    /* ── TABS ───────────────────────────────────────────── */
+    .tabs {
+      display: flex; gap: 4px;
+      background: var(--navy3);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 18px;
     }
+    .tab-btn {
+      flex: 1; padding: 9px 12px;
+      border: none; border-radius: 9px;
+      font-family: inherit; font-size: 0.82rem; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+    .tab-btn.olympic {
+      background: transparent; color: var(--muted);
+    }
+    .tab-btn.olympic.active {
+      background: linear-gradient(135deg, var(--blue), #1a56db);
+      color: #fff;
+    }
+    .tab-btn.para {
+      background: transparent; color: var(--muted);
+    }
+    .tab-btn.para.active {
+      background: linear-gradient(135deg, var(--para), var(--para2));
+      color: #fff;
+    }
+    .tab-btn:hover:not(.active) { color: var(--text); background: var(--navy4); }
 
-    /* ── ERROR ──────────────────────────────────────────── */
-    .error-box {
-      background: rgba(191, 43, 43, 0.12);
-      border: 1px solid rgba(191, 43, 43, 0.4);
-      border-radius: var(--radius);
-      padding: 20px 24px;
-      color: #f87171;
-      font-size: 0.9rem;
-      line-height: 1.5;
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .section-label {
+      font-size: 0.68rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 12px;
     }
 
     /* ── SPORT CARD ─────────────────────────────────────── */
-    .sport-list { display: flex; flex-direction: column; gap: 10px; }
+    .sport-list { display: flex; flex-direction: column; gap: 9px; }
 
     .sport-card {
       background: var(--navy2);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: grid;
-      grid-template-columns: 48px 1fr auto;
-      gap: 0 16px;
+      grid-template-columns: 44px 1fr auto;
+      gap: 0 14px;
       align-items: center;
       transition: background 0.15s, border-color 0.15s, transform 0.15s;
-      animation: slideIn 0.4s ease both;
+      animation: slideIn 0.35s ease both;
     }
     .sport-card:hover {
       background: var(--navy3);
       border-color: rgba(255,255,255,0.12);
       transform: translateX(3px);
     }
-
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* stagger cards */
-    {% for i in range(1, 11) %}
-    .sport-card:nth-child({{ i }}) { animation-delay: {{ (i - 1) * 0.05 }}s; }
-    {% endfor %}
+    /* Olympic top-3 glow */
+    .sport-card.rank-1.oly { border-color: rgba(245,197,24,0.35); background: linear-gradient(135deg, rgba(245,197,24,0.07) 0%, var(--navy2) 60%); }
+    .sport-card.rank-2.oly { border-color: rgba(192,200,212,0.25); background: linear-gradient(135deg, rgba(192,200,212,0.05) 0%, var(--navy2) 60%); }
+    .sport-card.rank-3.oly { border-color: rgba(205,140,74,0.25);  background: linear-gradient(135deg, rgba(205,140,74,0.05) 0%, var(--navy2) 60%); }
 
-    .sport-card.rank-1 { border-color: rgba(245,197,24,0.35); background: linear-gradient(135deg, rgba(245,197,24,0.07) 0%, var(--navy2) 60%); }
-    .sport-card.rank-2 { border-color: rgba(192,200,212,0.25); background: linear-gradient(135deg, rgba(192,200,212,0.05) 0%, var(--navy2) 60%); }
-    .sport-card.rank-3 { border-color: rgba(205,140,74,0.25);  background: linear-gradient(135deg, rgba(205,140,74,0.05) 0%, var(--navy2) 60%); }
+    /* Paralympic top-3 glow */
+    .sport-card.rank-1.par { border-color: rgba(147,51,234,0.5); background: linear-gradient(135deg, rgba(147,51,234,0.1) 0%, var(--navy2) 60%); }
+    .sport-card.rank-2.par { border-color: rgba(192,200,212,0.25); background: linear-gradient(135deg, rgba(192,200,212,0.05) 0%, var(--navy2) 60%); }
+    .sport-card.rank-3.par { border-color: rgba(205,140,74,0.25);  background: linear-gradient(135deg, rgba(205,140,74,0.05) 0%, var(--navy2) 60%); }
 
     .rank-badge {
-      width: 44px; height: 44px;
-      border-radius: 12px;
+      width: 40px; height: 40px; border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
-      font-weight: 900;
-      font-size: 1rem;
-      flex-shrink: 0;
+      font-weight: 900; font-size: 0.95rem; flex-shrink: 0;
     }
-    .rank-1 .rank-badge { background: rgba(245,197,24,0.15); color: var(--gold); font-size: 1.4rem; }
-    .rank-2 .rank-badge { background: rgba(192,200,212,0.12); color: var(--silver); font-size: 1.4rem; }
-    .rank-3 .rank-badge { background: rgba(205,140,74,0.12);  color: var(--bronze); font-size: 1.4rem; }
-    .rank-badge.num    { background: var(--navy4); color: var(--muted); }
+    .rank-badge.medal { font-size: 1.35rem; background: transparent; }
+    .rank-badge.num   { background: var(--navy4); color: var(--muted); }
+
+    /* PARA badge */
+    .para-pill {
+      display: inline-flex; align-items: center;
+      background: rgba(147,51,234,0.15);
+      border: 1px solid rgba(147,51,234,0.35);
+      color: #c084fc;
+      border-radius: 999px;
+      padding: 1px 7px;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.08em;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
 
     .sport-info { grid-column: 2; overflow: hidden; }
     .sport-name {
-      font-weight: 700;
-      font-size: 0.97rem;
-      letter-spacing: -0.01em;
-      color: #fff;
-      margin-bottom: 4px;
+      font-weight: 700; font-size: 0.94rem;
+      letter-spacing: -0.01em; color: #fff; margin-bottom: 3px;
     }
     .sport-insight {
-      font-size: 0.78rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 8px;
+      font-size: 0.76rem; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 7px;
     }
 
     .bar-track {
-      height: 5px;
-      border-radius: 999px;
-      background: var(--navy4);
-      overflow: hidden;
+      height: 4px; border-radius: 999px;
+      background: var(--navy4); overflow: hidden;
     }
     .bar-fill {
-      height: 100%;
-      border-radius: 999px;
-      transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%; border-radius: 999px;
+      transition: width 1s cubic-bezier(0.4,0,0.2,1);
     }
     .bar-high   { background: linear-gradient(90deg, #22c55e, #4ade80); }
     .bar-medium { background: linear-gradient(90deg, #eab308, #facc15); }
     .bar-low    { background: linear-gradient(90deg, #f97316, #fb923c); }
+    .bar-para   { background: linear-gradient(90deg, #9333ea, #c084fc); }
 
-    .score-block {
-      grid-column: 3;
-      text-align: right;
-      flex-shrink: 0;
-    }
+    .score-block { grid-column: 3; text-align: right; flex-shrink: 0; }
     .score-number {
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1;
+      font-size: 1.9rem; font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
     }
     .score-high   { color: var(--green); }
     .score-medium { color: var(--yellow); }
     .score-low    { color: var(--orange); }
+    .score-para   { color: #c084fc; }
     .score-label {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 2px;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-top: 2px;
+    }
+
+    /* ── ERROR ──────────────────────────────────────────── */
+    .error-box {
+      background: rgba(191,43,43,0.12);
+      border: 1px solid rgba(191,43,43,0.4);
+      border-radius: var(--radius); padding: 18px 22px;
+      color: #f87171; font-size: 0.9rem; line-height: 1.5;
     }
 
     /* ── CHAT PANEL ─────────────────────────────────────── */
     .chat-panel {
       border-left: 1px solid var(--border);
       background: var(--navy2);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      display: flex; flex-direction: column; overflow: hidden;
     }
 
     .chat-header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
+      display: flex; align-items: center; gap: 10px; flex-shrink: 0;
     }
     .chat-icon {
-      width: 34px; height: 34px;
-      border-radius: 10px;
+      width: 32px; height: 32px; border-radius: 9px;
       background: linear-gradient(135deg, var(--blue), #1a56db);
       display: flex; align-items: center; justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
+      font-size: 0.95rem; flex-shrink: 0;
     }
-    .chat-header-text h2 {
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: #fff;
-    }
-    .chat-header-text p {
-      font-size: 0.7rem;
-      color: var(--muted);
-      margin-top: 1px;
-    }
+    .chat-header-text h2 { font-size: 0.9rem; font-weight: 700; color: #fff; }
+    .chat-header-text p  { font-size: 0.68rem; color: var(--muted); margin-top: 1px; }
 
     .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      scrollbar-width: thin;
-      scrollbar-color: var(--navy4) transparent;
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      scrollbar-width: thin; scrollbar-color: var(--navy4) transparent;
     }
     .chat-messages::-webkit-scrollbar { width: 4px; }
     .chat-messages::-webkit-scrollbar-thumb { background: var(--navy4); border-radius: 4px; }
 
-    .msg {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      animation: fadeUp 0.25s ease;
-    }
+    .msg { display: flex; flex-direction: column; gap: 3px; animation: fadeUp 0.25s ease; }
     @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(6px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     .msg.user  { align-items: flex-end; }
     .msg.model { align-items: flex-start; }
 
     .msg-label {
-      font-size: 0.65rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      padding: 0 4px;
+      font-size: 0.62rem; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); padding: 0 4px;
     }
-
     .bubble {
-      max-width: 88%;
-      padding: 10px 14px;
-      border-radius: 14px;
-      font-size: 0.84rem;
-      line-height: 1.6;
-      white-space: pre-wrap;
-      word-break: break-word;
+      max-width: 90%; padding: 9px 13px; border-radius: 13px;
+      font-size: 0.83rem; line-height: 1.6;
+      white-space: pre-wrap; word-break: break-word;
     }
-    .msg.user  .bubble {
-      background: linear-gradient(135deg, var(--blue), #1a56db);
-      color: #fff;
-      border-bottom-right-radius: 4px;
-    }
-    .msg.model .bubble {
-      background: var(--navy3);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-bottom-left-radius: 4px;
-    }
+    .msg.user  .bubble { background: linear-gradient(135deg, var(--blue), #1a56db); color: #fff; border-bottom-right-radius: 4px; }
+    .msg.model .bubble { background: var(--navy3); border: 1px solid var(--border); color: var(--text); border-bottom-left-radius: 4px; }
 
     .typing-bubble {
-      background: var(--navy3);
-      border: 1px solid var(--border);
-      padding: 12px 18px;
-      border-radius: 14px;
-      border-bottom-left-radius: 4px;
-      display: flex;
-      gap: 5px;
-      align-items: center;
+      background: var(--navy3); border: 1px solid var(--border);
+      padding: 11px 16px; border-radius: 13px; border-bottom-left-radius: 4px;
+      display: flex; gap: 5px; align-items: center;
     }
     .dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--muted);
-      animation: bounce 1.2s ease-in-out infinite;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--muted); animation: bounce 1.2s ease-in-out infinite;
     }
     .dot:nth-child(2) { animation-delay: 0.2s; }
     .dot:nth-child(3) { animation-delay: 0.4s; }
@@ -372,86 +331,58 @@
     }
 
     .chat-suggestions {
-      padding: 0 16px 10px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+      padding: 0 14px 8px;
+      display: flex; flex-wrap: wrap; gap: 5px;
     }
     .suggestion-chip {
-      background: var(--navy4);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 5px 12px;
-      font-size: 0.73rem;
-      color: var(--muted);
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s, border-color 0.15s;
+      background: var(--navy4); border: 1px solid var(--border);
+      border-radius: 999px; padding: 4px 11px;
+      font-size: 0.71rem; color: var(--muted);
+      cursor: pointer; transition: all 0.15s;
     }
-    .suggestion-chip:hover {
-      background: var(--navy3);
-      color: var(--text);
-      border-color: rgba(255,255,255,0.15);
+    .suggestion-chip:hover { background: var(--navy3); color: var(--text); border-color: rgba(255,255,255,0.15); }
+    .suggestion-chip.para-chip {
+      border-color: rgba(147,51,234,0.3); color: #c084fc;
+      background: rgba(147,51,234,0.08);
     }
+    .suggestion-chip.para-chip:hover { background: rgba(147,51,234,0.15); }
 
     .chat-input-area {
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .chat-input {
-      flex: 1;
-      background: var(--navy4);
-      border: 1px solid var(--border);
-      border-radius: 10px;
       padding: 10px 14px;
-      color: var(--text);
-      font-family: inherit;
-      font-size: 0.85rem;
-      outline: none;
-      resize: none;
-      height: 42px;
-      max-height: 120px;
-      transition: border-color 0.15s;
-      line-height: 1.4;
+      border-top: 1px solid var(--border);
+      display: flex; gap: 8px; flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1; background: var(--navy4); border: 1px solid var(--border);
+      border-radius: 10px; padding: 9px 13px; color: var(--text);
+      font-family: inherit; font-size: 0.84rem; outline: none;
+      resize: none; height: 40px; max-height: 120px;
+      transition: border-color 0.15s; line-height: 1.4;
     }
     .chat-input:focus { border-color: var(--blue); }
     .chat-input::placeholder { color: var(--muted); }
 
     .send-btn {
-      width: 42px; height: 42px;
-      flex-shrink: 0;
-      border-radius: 10px;
+      width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px;
       background: linear-gradient(135deg, var(--blue), #1a56db);
-      border: none;
-      cursor: pointer;
+      border: none; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: opacity 0.15s, transform 0.1s;
-      color: #fff;
+      transition: opacity 0.15s, transform 0.1s; color: #fff;
     }
     .send-btn:hover:not(:disabled) { opacity: 0.88; }
     .send-btn:active:not(:disabled) { transform: scale(0.94); }
     .send-btn:disabled { opacity: 0.4; cursor: default; }
-    .send-btn svg { width: 18px; height: 18px; fill: currentColor; }
+    .send-btn svg { width: 17px; height: 17px; fill: currentColor; }
 
-    /* ── EMPTY STATE ───────────────────────────────────── */
     .empty-chat {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 32px;
-      text-align: center;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 7px; padding: 28px; text-align: center;
     }
-    .empty-icon { font-size: 2.4rem; }
-    .empty-chat h3 { font-size: 0.95rem; font-weight: 700; color: var(--text); }
-    .empty-chat p  { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+    .empty-icon { font-size: 2.2rem; }
+    .empty-chat h3 { font-size: 0.92rem; font-weight: 700; color: var(--text); }
+    .empty-chat p  { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
 
-    /* ── SCROLLBAR FOR RANKINGS ────────────────────────── */
     @media (max-width: 900px) {
       .main { grid-template-columns: 1fr; }
       .chat-panel { display: none; }
@@ -467,7 +398,7 @@
       <div class="logo-ring"></div>
       <div class="header-title">
         <h1>LA28 <span>Momentum</span> Tracker</h1>
-        <p>Team USA &bull; 2028 Los Angeles Olympics</p>
+        <p>Team USA &bull; 2028 Los Angeles Olympics &amp; Paralympics</p>
       </div>
     </div>
     <div class="header-badge">
@@ -480,51 +411,83 @@
 
     <!-- RANKINGS PANEL -->
     <section class="rankings-panel">
-      <div class="section-title">Sport Rankings by Momentum Score</div>
 
       {% if error %}
-      <div class="error-box">
-        <strong>Error:</strong> {{ error }}
+      <div class="error-box"><strong>Error:</strong> {{ error }}</div>
+      {% else %}
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab-btn olympic active" onclick="switchTab('olympic')">
+          🏅 Olympic Sports
+        </button>
+        <button class="tab-btn para" onclick="switchTab('para')">
+          ♿ Paralympic Sports
+        </button>
       </div>
-      {% elif sports %}
-      <div class="sport-list">
-        {% for sport in sports %}
-        {% set score = sport.score %}
-        {% set rank  = sport.rank %}
-        {% if score >= 75 %}{% set tier = "high" %}
-        {% elif score >= 50 %}{% set tier = "medium" %}
-        {% else %}{% set tier = "low" %}{% endif %}
 
-        <div class="sport-card rank-{{ rank if rank <= 3 else 'other' }}">
+      <!-- OLYMPIC TAB -->
+      <div class="tab-panel active" id="tab-olympic">
+        <div class="section-label">Olympic — Ranked by Momentum Score</div>
+        <div class="sport-list">
+          {% for sport in olympic %}
+          {% set score = sport.score %}
+          {% set rank  = sport.rank %}
+          {% if score >= 75 %}{% set tier = "high" %}
+          {% elif score >= 50 %}{% set tier = "medium" %}
+          {% else %}{% set tier = "low" %}{% endif %}
 
-          <!-- Rank badge -->
-          <div class="rank-badge {% if rank > 3 %}num{% endif %}">
-            {% if rank == 1 %}🥇
-            {% elif rank == 2 %}🥈
-            {% elif rank == 3 %}🥉
-            {% else %}{{ rank }}{% endif %}
-          </div>
-
-          <!-- Sport info -->
-          <div class="sport-info">
-            <div class="sport-name">{{ sport.name }}</div>
-            <div class="sport-insight">{{ sport.insight }}</div>
-            <div class="bar-track">
-              <div class="bar-fill bar-{{ tier }}" style="width: {{ score }}%;"></div>
+          <div class="sport-card rank-{{ rank if rank <= 3 else 'other' }} oly">
+            <div class="rank-badge {% if rank <= 3 %}medal{% else %}num{% endif %}">
+              {% if rank == 1 %}🥇{% elif rank == 2 %}🥈{% elif rank == 3 %}🥉{% else %}{{ rank }}{% endif %}
+            </div>
+            <div class="sport-info">
+              <div class="sport-name">{{ sport.name }}</div>
+              <div class="sport-insight">{{ sport.insight }}</div>
+              <div class="bar-track">
+                <div class="bar-fill bar-{{ tier }}" style="width: {{ score }}%;"></div>
+              </div>
+            </div>
+            <div class="score-block">
+              <div class="score-number score-{{ tier }}">{{ score }}</div>
+              <div class="score-label">/ 100</div>
             </div>
           </div>
-
-          <!-- Score -->
-          <div class="score-block">
-            <div class="score-number score-{{ tier }}">{{ score }}</div>
-            <div class="score-label">/ 100</div>
-          </div>
-
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
-      {% else %}
-      <div class="error-box">No data available. Check your GEMINI_API_KEY in .env</div>
+
+      <!-- PARALYMPIC TAB -->
+      <div class="tab-panel" id="tab-para">
+        <div class="section-label">Paralympic — Ranked by Momentum Score</div>
+        <div class="sport-list">
+          {% for sport in para %}
+          {% set score = sport.score %}
+          {% set rank  = sport.rank %}
+
+          <div class="sport-card rank-{{ rank if rank <= 3 else 'other' }} par">
+            <div class="rank-badge {% if rank <= 3 %}medal{% else %}num{% endif %}">
+              {% if rank == 1 %}🥇{% elif rank == 2 %}🥈{% elif rank == 3 %}🥉{% else %}{{ rank }}{% endif %}
+            </div>
+            <div class="sport-info">
+              <div class="sport-name">
+                {{ sport.name }}
+                <span class="para-pill">PARA</span>
+              </div>
+              <div class="sport-insight">{{ sport.insight }}</div>
+              <div class="bar-track">
+                <div class="bar-fill bar-para" style="width: {{ score }}%;"></div>
+              </div>
+            </div>
+            <div class="score-block">
+              <div class="score-number score-para">{{ score }}</div>
+              <div class="score-label">/ 100</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
       {% endif %}
     </section>
 
@@ -534,7 +497,7 @@
         <div class="chat-icon">💬</div>
         <div class="chat-header-text">
           <h2>Team USA Analyst</h2>
-          <p>Ask anything about LA28 preparation</p>
+          <p>Olympic &amp; Paralympic LA28 expert</p>
         </div>
       </div>
 
@@ -542,24 +505,19 @@
         <div class="empty-chat" id="emptyState">
           <div class="empty-icon">🏅</div>
           <h3>Your LA28 Analyst</h3>
-          <p>Ask about athletes, events, medal prospects, or anything Team USA heading into LA28.</p>
+          <p>Ask about Olympic or Paralympic athletes, medal prospects, and Team USA's road to LA28.</p>
         </div>
       </div>
 
       <div class="chat-suggestions" id="suggestions">
-        <button class="suggestion-chip" onclick="sendSuggestion(this)">Who leads swimming?</button>
-        <button class="suggestion-chip" onclick="sendSuggestion(this)">Top gymnastics athletes?</button>
+        <button class="suggestion-chip" onclick="sendSuggestion(this)">Top swimming prospects?</button>
         <button class="suggestion-chip" onclick="sendSuggestion(this)">Medal predictions?</button>
-        <button class="suggestion-chip" onclick="sendSuggestion(this)">Best improvement?</button>
+        <button class="suggestion-chip para-chip" onclick="sendSuggestion(this)">Wheelchair Basketball?</button>
+        <button class="suggestion-chip para-chip" onclick="sendSuggestion(this)">Para Athletics stars?</button>
       </div>
 
       <div class="chat-input-area">
-        <textarea
-          class="chat-input"
-          id="chatInput"
-          placeholder="Ask about Team USA…"
-          rows="1"
-        ></textarea>
+        <textarea class="chat-input" id="chatInput" placeholder="Ask about Team USA…" rows="1"></textarea>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
           <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
         </button>
@@ -573,23 +531,23 @@
   const chatMessages = document.getElementById('chatMessages');
   const chatInput    = document.getElementById('chatInput');
   const sendBtn      = document.getElementById('sendBtn');
-  const emptyState   = document.getElementById('emptyState');
   const suggestions  = document.getElementById('suggestions');
+  let emptyState     = document.getElementById('emptyState');
+  let history        = [];
 
-  // Conversation history sent to the server with each request
-  let history = [];
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.tab-btn.${tab}`).classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  }
 
-  // Auto-grow textarea
   chatInput.addEventListener('input', () => {
-    chatInput.style.height = '42px';
+    chatInput.style.height = '40px';
     chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
   });
-
   chatInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
 
   function sendSuggestion(el) {
@@ -599,39 +557,31 @@
   }
 
   function appendMessage(role, content) {
-    if (emptyState) emptyState.remove();
-
+    if (emptyState) { emptyState.remove(); emptyState = null; }
     const wrapper = document.createElement('div');
     wrapper.className = `msg ${role}`;
-
     const label = document.createElement('div');
     label.className = 'msg-label';
     label.textContent = role === 'user' ? 'You' : 'Team USA Analyst';
-
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.textContent = content;
-
     wrapper.appendChild(label);
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    return bubble;
   }
 
   function showTyping() {
     const wrapper = document.createElement('div');
     wrapper.className = 'msg model';
     wrapper.id = 'typingIndicator';
-
     const label = document.createElement('div');
     label.className = 'msg-label';
     label.textContent = 'Team USA Analyst';
-
     const bubble = document.createElement('div');
     bubble.className = 'typing-bubble';
     bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
-
     wrapper.appendChild(label);
     wrapper.appendChild(bubble);
     chatMessages.appendChild(wrapper);
@@ -646,35 +596,28 @@
   async function sendMessage() {
     const text = chatInput.value.trim();
     if (!text) return;
-
     chatInput.value = '';
-    chatInput.style.height = '42px';
+    chatInput.style.height = '40px';
     sendBtn.disabled = true;
-
     appendMessage('user', text);
     showTyping();
-
     try {
       const res = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message: text, history }),
       });
-
       const data = await res.json();
       removeTyping();
-
       if (data.error) {
         appendMessage('model', `Error: ${data.error}`);
       } else {
         appendMessage('model', data.response);
-        // Add both turns to local history for context continuity
-        history.push({ role: 'user',  content: text });
+        history.push({ role: 'user', content: text });
         history.push({ role: 'model', content: data.response });
-        // Cap history to last 20 turns to avoid huge payloads
         if (history.length > 20) history = history.slice(-20);
       }
-    } catch (err) {
+    } catch {
       removeTyping();
       appendMessage('model', 'Network error — please try again.');
     } finally {

@@ -9,9 +9,15 @@ load_dotenv()
 
 app = Flask(__name__)
 
-SPORTS = [
+OLYMPIC_SPORTS = [
     "Swimming", "Gymnastics", "Track and Field", "Basketball",
     "Volleyball", "Wrestling", "Weightlifting", "Shooting", "Rowing", "Cycling",
+]
+
+PARA_SPORTS = [
+    "Wheelchair Basketball", "Para Swimming", "Para Athletics",
+    "Sitting Volleyball", "Wheelchair Rugby", "Para Cycling",
+    "Goalball", "Para Powerlifting",
 ]
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -20,36 +26,43 @@ client = genai.Client(api_key=api_key) if api_key else None
 MODEL = "gemini-2.5-flash"
 
 CHAT_SYSTEM = (
-    "You are an expert Team USA sports analyst and LA28 Olympic Games enthusiast. "
-    "Help fans track Team USA's momentum toward the 2028 Los Angeles Olympics. "
-    "Be specific, energetic, and concise. Reference real athletes, recent results, and storylines. "
+    "You are an expert Team USA sports analyst and LA28 Olympic and Paralympic Games enthusiast. "
+    "Help fans track Team USA's momentum toward the 2028 Los Angeles Olympics AND Paralympics. "
+    "Be specific, energetic, and concise. Cover both Olympic and Paralympic athletes equally. "
+    "Reference real athletes, recent results, and storylines from both programs. "
     "Keep answers to 2–4 sentences unless the user asks for more detail."
 )
 
-MOMENTUM_PROMPT = f"""You are a sports analyst covering Team USA's buildup to the 2028 Los Angeles Olympic Games (LA28).
+MOMENTUM_PROMPT = """You are a sports analyst covering Team USA's buildup to the 2028 Los Angeles Olympic and Paralympic Games (LA28).
 
-Rate the current momentum (as of early 2026) for each Team USA sport on a scale of 1–100, considering:
+Rate the current momentum (as of early 2026) for each sport on a scale of 1–100, considering:
 - Recent international results (2023–2026)
 - Depth of the athlete pipeline
 - Coaching infrastructure and investment
 - Trajectory vs. top rival nations
 
-Sports to rate: {', '.join(SPORTS)}
+OLYMPIC sports to rate: {olympic}
 
-For each sport also write a punchy one-line insight (≤12 words) on the single biggest momentum driver right now.
+PARALYMPIC sports to rate: {para}
+
+For each sport write a punchy one-line insight (≤12 words) on the single biggest momentum driver right now.
 
 Respond ONLY with valid JSON — no markdown fences, no extra commentary:
 {{
-  "sports": [
-    {{"name": "Swimming", "score": 91, "insight": "Elite relay depth makes them the team to beat."}},
-    {{"name": "Gymnastics", "score": 84, "insight": "..."}}
+  "olympic": [
+    {{"name": "Swimming", "score": 91, "insight": "Elite relay depth makes them the team to beat."}}
+  ],
+  "paralympic": [
+    {{"name": "Wheelchair Basketball", "score": 88, "insight": "Back-to-back gold medalists with a dominant roster returning."}}
   ]
 }}
 
-Include all 10 sports. Make scores varied and realistic."""
+Include ALL sports listed. Make scores varied and realistic.""".format(
+    olympic=", ".join(OLYMPIC_SPORTS),
+    para=", ".join(PARA_SPORTS),
+)
 
-
-FALLBACK_DATA = [
+OLYMPIC_FALLBACK = [
     {"name": "Swimming",        "score": 93, "insight": "Unprecedented relay depth and generational talent converging for LA28."},
     {"name": "Track and Field", "score": 88, "insight": "Sprint and field events producing record-breaking performances worldwide."},
     {"name": "Gymnastics",      "score": 85, "insight": "Next generation stars emerging behind Simone Biles' continuing legacy."},
@@ -62,6 +75,24 @@ FALLBACK_DATA = [
     {"name": "Weightlifting",   "score": 47, "insight": "Clean-sport reforms opening doors but the pipeline is still thin."},
 ]
 
+PARA_FALLBACK = [
+    {"name": "Wheelchair Basketball", "score": 94, "insight": "Back-to-back gold medalists with dominant roster returning for LA28."},
+    {"name": "Para Swimming",         "score": 90, "insight": "Deep multi-class roster sets world records at every major meet."},
+    {"name": "Para Athletics",        "score": 87, "insight": "Sprint and field para athletes breaking barriers at World Champs."},
+    {"name": "Sitting Volleyball",    "score": 83, "insight": "Women's team on an unbeaten streak in international competition."},
+    {"name": "Wheelchair Rugby",      "score": 78, "insight": "Physical style and tactical evolution making USA the team to beat."},
+    {"name": "Goalball",              "score": 70, "insight": "Women's program resurgent after rebuilding with young talent."},
+    {"name": "Para Cycling",          "score": 63, "insight": "New coaching staff accelerating development across all classifications."},
+    {"name": "Para Powerlifting",     "score": 55, "insight": "Emerging athletes pushing weight totals closer to podium contention."},
+]
+
+
+def rank_list(sports_list):
+    sports_list.sort(key=lambda x: x["score"], reverse=True)
+    for i, sport in enumerate(sports_list):
+        sport["rank"] = i + 1
+    return sports_list
+
 
 def get_momentum_data():
     response = client.models.generate_content(model=MODEL, contents=MOMENTUM_PROMPT)
@@ -72,25 +103,21 @@ def get_momentum_data():
         text = text.rsplit("```", 1)[0].strip()
 
     data = json.loads(text)
-    sports_list = data["sports"]
-    sports_list.sort(key=lambda x: x["score"], reverse=True)
-    for i, sport in enumerate(sports_list):
-        sport["rank"] = i + 1
-    return sports_list
+    return rank_list(data["olympic"]), rank_list(data["paralympic"])
 
 
 @app.route("/")
 def index():
     if not client:
-        return render_template("index.html", sports=[], error="GEMINI_API_KEY is not set in .env")
+        return render_template("index.html", olympic=[], para=[], error="GEMINI_API_KEY is not set in .env")
     try:
-        sports_data = get_momentum_data()
+        olympic, para = get_momentum_data()
         error = None
     except Exception:
-        # Quota exhausted or API unavailable — show static fallback so the UI is usable
-        sports_data = [dict(rank=i + 1, **s) for i, s in enumerate(FALLBACK_DATA)]
+        olympic = rank_list([dict(**s) for s in OLYMPIC_FALLBACK])
+        para = rank_list([dict(**s) for s in PARA_FALLBACK])
         error = None
-    return render_template("index.html", sports=sports_data, error=error)
+    return render_template("index.html", olympic=olympic, para=para, error=error)
 
 
 @app.route("/chat", methods=["POST"])
