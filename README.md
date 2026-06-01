@@ -4,7 +4,7 @@
 
 An AI-powered web application that tracks Team USA's competitive momentum across 18 Olympic and Paralympic disciplines ahead of the Los Angeles 2028 Games. Built with Gemini 2.5 Flash and deployed on Google Cloud Run.
 
-🔗 **[Live Demo](https://your-cloud-run-url)** — replace with your actual URL
+🔗 **[Live Demo](https://la28-momentum-tracker-1069330341609.us-central1.run.app)**
 
 ---
 
